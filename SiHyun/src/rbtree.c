@@ -4,11 +4,8 @@
 
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
-  // 할일: 구조체 필요하면 만들기
   p->root = NULL;
   p->nil = NULL;
-  // 포인터는 화살표로 접근
-  // 일반 변수는 .으로 접근
   return p;
 }
 
@@ -35,8 +32,11 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
-  // 할일: find 구현하기
-  return t->root;
+  
+  if (t->root->key != key) {
+    return NULL;
+  }
+  else {return t->root;}
 }
 
 node_t *rbtree_min(const rbtree *t) {
