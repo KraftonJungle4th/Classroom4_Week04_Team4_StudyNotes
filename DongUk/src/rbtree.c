@@ -19,7 +19,17 @@ void delete_rbtree(rbtree *t) {
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   // TODO: implement insert
-  return t->root;
+
+  // 새로운 node_t인 new_node 생성
+  // new_node에 key랑 color랑 할당
+  // Rb트리의 루트에 new_ node의 주소를 할당한다
+  node_t new_node;
+  new_node.key = key;
+  new_node.parent = NULL;
+  new_node.left = NULL;
+  new_node.right = NULL;
+  t->root = &new_node;
+  return t->root; 
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
