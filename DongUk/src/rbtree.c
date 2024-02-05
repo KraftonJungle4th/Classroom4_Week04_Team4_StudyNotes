@@ -34,7 +34,12 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
   // TODO: implement find
-  return t->root;
+  if (t->root->key != key) {
+    return NULL;
+  }
+  else {
+    return t->root;
+    }
 }
 
 node_t *rbtree_min(const rbtree *t) {
