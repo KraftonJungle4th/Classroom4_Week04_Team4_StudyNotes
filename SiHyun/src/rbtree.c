@@ -4,22 +4,38 @@
 
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
-  // TODO: initialize struct if needed
+  // 할일: 구조체 필요하면 만들기
+  p->root = NULL;
+  p->nil = NULL;
+  // 포인터는 화살표로 접근
+  // 일반 변수는 .으로 접근
   return p;
 }
 
 void delete_rbtree(rbtree *t) {
   // TODO: reclaim the tree nodes's memory
+  // 할일: 트리노드의 메모리를 회수하는것?
   free(t);
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
-  // TODO: implement insert
+  // 새로운 node_t인 new_node 생성
+  // new_node에 key랑 color랑 할당
+  // Rb트리의 루트에 new_ node의 주소를 할당한다
+  node_t new_node;
+  new_node.key = key;
+  new_node.parent = NULL;
+  new_node.left = NULL;
+  new_node.right = NULL;
+
+  t->root = &new_node;
+
+
   return t->root;
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
-  // TODO: implement find
+  // 할일: find 구현하기
   return t->root;
 }
 
