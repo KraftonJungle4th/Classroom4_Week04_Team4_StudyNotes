@@ -172,24 +172,19 @@ rbtree *new_rbtree(void) {
 
 // 추가함수
 void postorder(rbtree * t, node_t * target){
-  if (target->left != t->nil){
+
+    if (target != t->nil){
       postorder(t, target -> left);
-  }
-
-  if (target->right != t->nil){
       postorder(t, target -> right);
-  } 
-
-  free(target);
+      free(target);
+    }
 }
 
 void delete_rbtree(rbtree *t) {
   // TODO: reclaim the tree nodes's memory
 
-  if (t->root != t->nil){
-    postorder(t, t->root);
-  }
-
+  node_t *target = t->root;
+  postorder(t, target);
   free(t->nil);
   free(t);
 }
@@ -308,11 +303,12 @@ int rbtree_erase(rbtree *t, node_t *p) {
     y->left = p->left;
     y->left->parent = y;
     y->color = p->color;
-  if (y_original_color == RBTREE_BLACK) {
-    erase_fixup(t, x);
-    }
+  
   }
   free(p);
+  if (y_original_color == RBTREE_BLACK) {
+    erase_fixup(t, x);
+  }
   return 0;
 }
 
@@ -324,7 +320,6 @@ void inorder(const rbtree * t, node_t * target, int * index, size_t size, key_t 
   }
       inorder(t, target -> left, index, size, arr);
       if (*index < size){
-        printf("%d", target->key);
         arr[(*index)++] = target->key;
       }
       inorder(t, target -> right, index, size, arr);
