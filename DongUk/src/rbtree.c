@@ -23,18 +23,54 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   // 새로운 node_t인 new_node 생성
   // new_node에 key랑 color랑 할당
   // Rb트리의 루트에 new_ node의 주소를 할당한다
-  node_t new_node;
-  new_node.key = key;
-  new_node.parent = NULL;
-  new_node.left = NULL;
-  new_node.right = NULL;
-  t->root = &new_node;
+  // node_t new_node;
+  // new_node.key = key;
+  // new_node.parent = NULL;
+  // new_node.left = NULL;
+  // new_node.right = NULL;
+  // t->root = &new_node;
+
+  node_t z;
+  z.key = key;
+  z.parent = NULL;
+  z.left = NULL;
+  z.right = NULL;
+
+  node_t* y = t->nil;
+  node_t* x = t->root;
+
+  while (x != t->nil){
+      y = x;
+      if (z.key < x->key){
+        x = x->left;
+      } else {
+        x = x->right;
+      }
+  }
+  z.parent = y;
+  if (y == t->nil){
+    t->root = &z;
+  } else if(z.key < y->key){
+    y->left = &z;
+  } else{
+    y->right = &z;
+  }
+  z.left = t->nil;
+  z.right = t->nil;
+  z.color = RBTREE_RED;
+  // RB-Insert-Fixup(t, &z)
+
   return t->root; 
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
   // TODO: implement find
-  return t->root;
+  if (t->root->key != key) {
+    return NULL;
+  }
+  else {
+    return t->root;
+    }
 }
 
 node_t *rbtree_min(const rbtree *t) {

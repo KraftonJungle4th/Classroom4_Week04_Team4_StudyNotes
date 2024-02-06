@@ -1,5 +1,5 @@
 #include <assert.h>
-#include <rbtree.h>
+#include "../src/rbtree.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,10 +38,9 @@ void test_insert_single(const key_t key) { // key = 1024
 }
 
 // find should return the node with the key or NULL if no such node exists
-void test_find_single(const key_t key, const key_t wrong_key) {
+void test_find_single(const key_t key, const key_t wrong_key) { // 512, 1024
   rbtree *t = new_rbtree();
   node_t *p = rbtree_insert(t, key);
-
   node_t *q = rbtree_find(t, key);
   assert(q != NULL);
   assert(q->key == key);
@@ -368,8 +367,8 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 }
 
 int main(void) {
-  // test_init();
-  test_insert_single(1024);
+  test_init();
+  // test_insert_single(1024);
   // test_find_single(512, 1024);
   // test_erase_root(128);
   // test_find_erase_fixed();
