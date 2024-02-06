@@ -39,16 +39,16 @@ void right_rotate(rbtree * t, node_t * x){
 }
 
 void insert_fixup(rbtree * t, node_t * z){
-  node_t * y; // uncle
+  node_t * y = NULL; // uncle
   while (z->parent->color == RBTREE_RED){
     if (z->parent == z->parent->parent->left){ // 부모님이 할아버지의 왼쪽 자녀일 떄
         y = z->parent->parent->right; 
       if (y->color == RBTREE_RED){
         z->parent->color = RBTREE_BLACK;
         y->color = RBTREE_BLACK;
-        z->parent->parent = RBTREE_RED;
+        z->parent->parent->color = RBTREE_RED;
         z = z->parent->parent;
-        // continue; // 추가
+        continue; // 추가
       } else {
         if(z == z->parent->right){ // 아빠는 왼쪽인데 나는 오른쪽이므로 지그재그. 그래서 왼쪽으로 로테이트
         z = z->parent;
@@ -65,9 +65,9 @@ void insert_fixup(rbtree * t, node_t * z){
       if (y->color == RBTREE_RED){
         z->parent->color = RBTREE_BLACK;
         y->color = RBTREE_BLACK;
-        z->parent->parent = RBTREE_RED;
+        z->parent->parent->color = RBTREE_RED;
         z = z->parent->parent;
-        // continue; // 추가
+        continue; // 추가
       } else {
         if(z == z->parent->left){
         z = z->parent;
@@ -162,7 +162,7 @@ void erase_fixup(rbtree * t, node_t * x) {
 
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
-  node_t *nil = (node_t *)calloc(1, sizeof(node_t));
+  node_t *nil = (node_t *)malloc(sizeof(node_t));
   nil->color = RBTREE_BLACK;
   p->nil = nil;
   p->root = nil;
@@ -196,7 +196,7 @@ void delete_rbtree(rbtree *t) {
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   // TODO: implement insert
-  node_t *z = (node_t *)calloc(1, sizeof(node_t));
+  node_t *z = (node_t *)malloc(sizeof(node_t));
 
   z->key = key;
   z->parent = NULL;
@@ -249,7 +249,7 @@ node_t *rbtree_min(const rbtree *t) {
   // TODO: implement find
   node_t * cur = t -> root;
 
-  while(cur != t->nil){
+  while(cur->left != t->nil){
     cur = cur->left;
   }
   return cur;
@@ -260,7 +260,7 @@ node_t *rbtree_max(const rbtree *t) {
   
   node_t * cur = t -> root;
 
-  while(cur != t->nil){
+  while(cur->right != t->nil){
     cur = cur->right;
   }
   return cur;
@@ -277,41 +277,41 @@ node_t *find_successor(const rbtree *t, node_t* target) {
 }
 
 
-int rbtree_erase(rbtree *t, node_t *z) {
+int rbtree_erase(rbtree *t, node_t *p) {
   // TODO: implement erase
-  node_t *y = z;
-  node_t *x = t->root;
+  node_t *y = p;
+  node_t *x = NULL;
   color_t y_original_color = y->color;
 
-  if (z->left == t->nil) {
-    x = z->right;
-    rbtree_transplant(t, z, z->right);
+  if (p->left == t->nil) {
+    x = p->right;
+    rbtree_transplant(t, p, p->right);
   }
-  else if (z->right == t->nil) {
-    x = z->left;
-    rbtree_transplant(t, z, z->left);
+  else if (p->right == t->nil) {
+    x = p->left;
+    rbtree_transplant(t, p, p->left);
   }
   else {
-    y = find_successor(t, y); // 삭제되는 노드 y로 생각함.
+    y = find_successor(t, p->right); // 삭제되는 노드 y로 생각함.
     y_original_color = y->color;
     x = y->right;
-    if (y->parent == z) {
+    if (y->parent == p) {
       x->parent = y;
     }
     else {
       rbtree_transplant(t, y, y->right);
-      y->right = z->right;
+      y->right = p->right;
       y->right->parent = y;
       }
-    rbtree_transplant(t, z, y);
-    y->left = z->left;
+    rbtree_transplant(t, p, y);
+    y->left = p->left;
     y->left->parent = y;
-    y->color = z->color;
+    y->color = p->color;
   if (y_original_color == RBTREE_BLACK) {
     erase_fixup(t, x);
     }
   }
-  free(z);
+  free(p);
   return 0;
 }
 
