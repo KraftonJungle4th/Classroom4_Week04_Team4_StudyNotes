@@ -85,7 +85,7 @@ void rbtree_transplant(rbtree * t, node_t * u, node_t * v) {
   }
   else {
     u->parent->right = v;
-    }
+  }
   v->parent = u->parent;
 }
 
@@ -115,32 +115,33 @@ void erase_fixup(rbtree * t, node_t * x) {
       left_rotate(t, x->parent);
       x = t->root;
     }
-  else
-  {
-    node_t * w = x->parent->left;
-      if (w->color == RBTREE_RED) {
-        w->color = RBTREE_BLACK;
-        x->parent->color = RBTREE_RED;
-        right_rotate(t, x->parent);
-        w = x->parent->left;
-      }
-      if (w->left->color == RBTREE_BLACK && w->left->color == RBTREE_BLACK) {
-        w->color = RBTREE_RED;
-        x = x->parent;
-      }
-      else if (w->left->color == RBTREE_BLACK) {
+    else
+    {
+      node_t * w = x->parent->left;
+        if (w->color == RBTREE_RED) {
+          w->color = RBTREE_BLACK;
+          x->parent->color = RBTREE_RED;
+          right_rotate(t, x->parent);
+          w = x->parent->left;
+        }
+        if (w->right->color == RBTREE_BLACK && w->left->color == RBTREE_BLACK) {
+          w->color = RBTREE_RED;
+          x = x->parent;
+        }
+        else if (w->left->color == RBTREE_BLACK) {
+          w->right->color = RBTREE_BLACK;
+          w->color = RBTREE_RED;
+          left_rotate(t, w);
+          w = x->parent->left;
+        }
+        w->color = x->parent->color;
+        x->parent->color = RBTREE_BLACK;
         w->left->color = RBTREE_BLACK;
-        w->color = RBTREE_RED;
-        left_rotate(t, w);
-        w = x->parent->left;
-      }
-      w->color = x->parent->color;
-      x->parent->color = RBTREE_BLACK;
-      w->left->color = RBTREE_BLACK;
-      left_rotate(t, x->parent);
-      x = t->root;
-      }
+        right_rotate(t, x->parent);
+        x = t->root;
+    }
   }
+  x->color = RBTREE_BLACK;
 }
 
 rbtree *new_rbtree(void) {
@@ -248,6 +249,8 @@ int rbtree_erase(rbtree *t, node_t *z) {
     }
     else {
       rbtree_transplant(t, y, y->right);
+      y->right = z->right;
+      y->right->parent = y;
       }
     rbtree_transplant(t, z, y);
     y->left = z->left;
