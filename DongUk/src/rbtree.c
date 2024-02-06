@@ -1,4 +1,5 @@
 #include "rbtree.h"
+#include "stdio.h"
 
 #include <stdlib.h>
 
@@ -317,13 +318,14 @@ int rbtree_erase(rbtree *t, node_t *p) {
 
 
 // 추가함수
-void inorder(const rbtree * t, node_t * target, int index, size_t size, key_t *arr){
+void inorder(const rbtree * t, node_t * target, int * index, size_t size, key_t *arr){
   if (target == t->nil){
     return;
   }
       inorder(t, target -> left, index, size, arr);
-      if (index < size){
-        arr[index++] = target->key;
+      if (*index < size){
+        printf("%d", target->key);
+        arr[(*index)++] = target->key;
       }
       inorder(t, target -> right, index, size, arr);
 }
@@ -331,8 +333,10 @@ void inorder(const rbtree * t, node_t * target, int index, size_t size, key_t *a
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // TODO: implement to_array
+  int cnt = 0;
+  int * index = &cnt;
 
-  inorder(t, t->root, 0, n, arr);
+  inorder(t, t->root, index, n, arr);
 
   return 0;
 }
