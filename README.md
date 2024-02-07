@@ -1,3 +1,5 @@
+# 공부기간 : 2024.2.1(목) ~ 2024.2.7(수))
+
 # Red-Black Tree 구현
 
 Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C 언어로 구현하는 과제입니다.
